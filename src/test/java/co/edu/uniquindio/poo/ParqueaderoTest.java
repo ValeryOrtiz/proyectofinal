@@ -5,23 +5,17 @@
 
 package co.edu.uniquindio.poo;
 
-import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ParqueaderoTest {
     private static final Logger LOG = Logger.getLogger(co.edu.uniquindio.poo.AppTest.class.getName());
-
-    public AppTest() {
-    }
 
     //Duration duracion = Duration.between(carro.getFechaEntrada(), carro.getFechaSalida());
     //        long horas = duracion.toHours();
