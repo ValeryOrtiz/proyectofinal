@@ -52,12 +52,12 @@ public class ParqueaderoTest {
         carro.setFechaSalida(LocalDateTime.of(2024, 2, 22, 8, 0));
         // Si es de tipo Carro entonces calculta el costo total y lo verifica con un assertEquals
         // Repito el procedimiento para verificar moto hibrida y moto clasica
-        Vehiculo motoHibrida = new Moto("XDJ324", "AKT", "Andres", LocalDateTime.of(2024, 2, 22, 7, 0), TipoMoto.HIBRIDA);
+        Vehiculo motoHibrida = new Moto("XDJ324", "AKT", "Andres", LocalDateTime.of(2024, 2, 22, 7, 0), 70, TipoMoto.HIBRIDA);
         // Agrego la moto al parqueadero
         parqueadero.add(motoHibrida);
         // Establezco una fecha de salida
         motoHibrida.setFechaSalida(LocalDateTime.of(2024, 2, 22, 9, 0));
-        Vehiculo motoClasica = new Moto("GHY824", "MERC", "RayoMcQueen", LocalDateTime.of(2024, 2, 22, 7, 0), TipoMoto.CLASICA);
+        Vehiculo motoClasica = new Moto("GHY824", "MERC", "RayoMcQueen", LocalDateTime.of(2024, 2, 22, 7, 0), 70, TipoMoto.CLASICA);
         // Agrego la moto al parqueadero
         parqueadero.add(motoClasica);
         // Establezco una fecha de salida
