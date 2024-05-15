@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.logging.Logger;
 import org.junit.jupiter.api.Test;
 import java.util.LinkedList;
@@ -38,7 +39,7 @@ public class ReporteMonetarioTest {
     @Test
     public void coleccionDiariaConDatos(){
         LOG.info("Inicio prueba de coleccionDiariaConDatos");
-        var parqueadero=new Parqueadero(4,5,2000,1900,3000);
+        var parqueadero=new Parqueadero();
 
         var vehiculo1=new Moto("123","A","Jade",LocalDateTime.of(14,05,24,12,45,0),LocalDateTime.of(14,05,24,17,45,0),80,CLASICA);
         var vehiculo2=new Carro("234","B","Anni",LocalDateTime.of(14,05,24,12,45,0),LocalDateTime.of(14,05,24,17,45,0));
@@ -57,8 +58,9 @@ public class ReporteMonetarioTest {
 
         
         var vehiculosEsperados= List.of(dinero1, dinero2, dinero3, dinero4);
+        Collection<Vehiculo> vehiculos= List.of(dinero1, dinero2, dinero3, dinero4);
 
-        var vehiculosLista=ReporteMonetario.registrarDineroDiario(dinero1,dinero2,dinero3,dinero4);
+        var vehiculosLista=ReporteMonetario.registrarDineroDiario(vehiculos);
 
         assertEquals(vehiculosEsperados, vehiculosLista);
 
@@ -84,9 +86,9 @@ public class ReporteMonetarioTest {
         var dinero3=parqueadero.calcularCosto(hora3);
         var dinero4=parqueadero.calcularCosto(hora4);
 
-        var vehiculos= List.of(dinero1, dinero2, dinero3, dinero4);
+        List<Double> vehiculos= List.of(dinero1, dinero2, dinero3, dinero4);
 
-        var costoEsperado= dinero1+dinero2+dinero3+dinero4;
+        int costoEsperado = dinero1 + dinero2 + dinero3 + dinero4;
         var costoReal=ReporteMonetario.calcularDineroDiario(vehiculos);
         assertEquals(costoEsperado, costoReal);
 
@@ -95,7 +97,7 @@ public class ReporteMonetarioTest {
     @Test
     public void coleccionMensualConDatos(){
         LOG.info("Fin prueba de coleccionDiariaConDatos");
-        var parqueadero=new Parqueadero(4,5,2000,1900,3000);
+        var parqueadero=new Parqueadero();
 
         var vehiculo1=new Moto("123","A","Jade",LocalDateTime.of(14,05,24,12,45,0),LocalDateTime.of(14,05,24,17,45,0),80,CLASICA);
         var vehiculo2=new Carro("234","B","Anni",LocalDateTime.of(14,05,24,12,45,0),LocalDateTime.of(14,05,24,17,45,0));
@@ -115,8 +117,11 @@ public class ReporteMonetarioTest {
         var dinero3=parqueadero.calcularCosto(hora3);
         var dinero4=parqueadero.calcularCosto(hora4);
 
-        var vehiculosLista1=ReporteMonetario.registrarDineroDiario(dinero1,dinero2);
-        var vehiculosLista2=ReporteMonetario.registrarDineroDiario(dinero3,dinero4);
+        Collection<Vehiculo> dinero= List.of(dinero1,dinero2);
+        Collection<Vehiculo> dineroOtro= List.of(dinero1,dinero2);
+
+        var vehiculosLista1=ReporteMonetario.registrarDineroDiario(dinero);
+        var vehiculosLista2=ReporteMonetario.registrarDineroDiario(dineroOtro);
         
         var listaMensual=ReporteMonetario.registrarDineroMensual(vehiculosLista1,vehiculosLista2);
         LOG.info("Fin prueba de coleccionDiariaConDatos");
