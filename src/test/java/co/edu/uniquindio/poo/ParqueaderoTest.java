@@ -25,7 +25,7 @@ public class ParqueaderoTest {
     public void obtenerDiferenciaHorasTest(){
         LOG.info("Iniciando test para obtener diferencia en horas");
         // Creó una instancia de Parqueadero
-        Parqueadero parqueadero = new Parqueadero(2, 3, 1500, 1000, 3000);
+        Parqueadero parqueadero = new Parqueadero();
         // Creó una instancia de Carro con fecha de entrada
         Vehiculo carro = new Carro("VGT777", "BUGAT", "Pedro", LocalDateTime.of(2024, 2, 22, 7, 0));
         // Agrego el carro al parqueadero
@@ -43,7 +43,7 @@ public class ParqueaderoTest {
     public void calcularCostoTest(){
         LOG.info("Iniciando test para calcular costo");
         // Creó una instancia de Parqueadero
-        Parqueadero parqueadero = new Parqueadero(2, 3, 1000, 1500, 3000);
+        Parqueadero parqueadero = new Parqueadero();
         // Creó una instancia de Carro con fecha de entrada
         Vehiculo carro = new Carro("VGT777", "BUGAT", "Pedro", LocalDateTime.of(2024, 2, 22, 7, 0));
         // Agrego el carro al parqueadero
@@ -75,7 +75,7 @@ public class ParqueaderoTest {
     public void ingresarFilasYColumnasTest(){
         LOG.info("Iniciando test para ingresar las filas y columnas. ");
         // Instancio un Parqueadero
-        Parqueadero parqueadero = new Parqueadero(2, 3, 1000, 1500, 3000);
+        Parqueadero parqueadero = new Parqueadero();
         // Lista esperada según los parametros de fila y de columnas del objeto
         Collection<List<Collection<Vehiculo>>> listaEsperada = List.of(
                 List.<Collection<Vehiculo>>of((Collection<Vehiculo>) List.of(), List.of(), List.of()),
@@ -104,7 +104,7 @@ public class ParqueaderoTest {
         // espero que me salga un error porque estoy verificando en la primera fila la posición 0
         // el cual no tiene ningun vehiculo, por tal razon, me devolver un False
         // preguntar a profesor acerca del runtime
-        assertThrows(RuntimeException.class, () -> parqueadero.verificarPuestoOcupado(0, 1));
+        assertThrows(RuntimeException.class, () -> parqueadero.verificarPuestoOcupado(0, 0));
         LOG.info("Finalizando test para verificar puesto");
     }
 
