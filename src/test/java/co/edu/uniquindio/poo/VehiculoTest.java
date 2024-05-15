@@ -49,19 +49,19 @@ public class VehiculoTest {
         assertThrows(Throwable.class,() -> new Vehiculo(null,null,null));
         LOG.info("finalizando test InfoNull");
     }
-    /*Realizo prueba para verificar que la placa de moto no se repita */
+    /*test para que la velocidadmaxima de la moto no sea negativa */
     @Test
-    public void PlacaRepetida() {
-        LOG.info("Iniciando test PlacaRepetida");
-
-        Vehiculo vehiculo = new Veehiculo("Moto");
-        Moto moto1 = new Moto("TAB23G","AUDI XX","DAVID FERNANDEZ HOGUERA");
-        MOTO moto2 = new Moto("TAB23G","SUZUKI FOX","VALERY ANDREA MARTINEZ");
-
-        vehiculo.motoAdd(moto1);
-        assertThrows(Throwable.class, () -> vehiculo.motoAdd(moto2));
-
-        LOG.info("Finalizando test PlacaRepetida");
+    public void VelocidadNegativa(){
+        LOG.info("Inicio test VelocidadNegativa");
+        assertThrows(Throwable.class,() -> new Pets("Abril","gato","angora",(byte)-4,"hembra","blanco con gris",4.2));
+        LOG.info("Finalizando test NegativeAge");
+    }
+    /*test informacion en blanco */
+    @Test
+    public void InfoBlank(){
+        LOG.info("Iniciando test InfoBlank");
+        assertThrows(Throwable.class, () -> new Vehiculo(null,null,null));
+        LOG.info("Finalizando test InfoBlank");
     }
 
 
