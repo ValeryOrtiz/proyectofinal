@@ -84,8 +84,8 @@ public class ParqueaderoTest {
         Parqueadero parqueadero = new Parqueadero(2, 3, 1000, 1500, 3000);
         // Lista esperada según los parametros de fila y de columnas del objeto
         Collection<List<Collection<Vehiculo>>> listaEsperada = List.of(
-                List.of(List.of(), List.of(), List.of()),
-                List.of(List.of(), List.of(), List.of())
+                List.<Collection<Vehiculo>>of((Collection<Vehiculo>) List.of(), List.of(), List.of()),
+                List.<Collection<Vehiculo>>of((Collection<Vehiculo>) List.of(), List.of(), List.of())
         );
         // Creo la lista con el metodo
         Collection<List<Collection<Vehiculo>>> listaFilasYColumnas = parqueadero.ingresarFilasYColumnas();
@@ -104,8 +104,8 @@ public class ParqueaderoTest {
         Vehiculo vehiculo5 = new Carro("VGT777", "BUGAT", "Pedro", LocalDateTime.of(2024, 2, 22, 7, 0), LocalDateTime.of(2024, 2, 22, 8, 0));
         // Creó una lista verificando el puesto que esta ocupado
         Collection<List<Collection<Vehiculo>>> parqueadero = List.of(
-                List.of(List.of(), List.of(vehiculo1), List.of(vehiculo2)),
-                List.of(List.of(vehiculo5), List.of(vehiculo4), List.of(vehiculo3))
+                List.<Collection<Vehiculo>>of((Collection<Vehiculo>) List.of(), List.of(vehiculo1), List.of(vehiculo2)),
+                List.<Collection<Vehiculo>>of((Collection<Vehiculo>) List.of(vehiculo5), List.of(vehiculo4), List.of(vehiculo3))
         );
         // espero que me salga un error porque estoy verificando en la primera fila la posición 0
         // el cual no tiene ningun vehiculo, por tal razon, me devolver un False
@@ -121,8 +121,8 @@ public class ParqueaderoTest {
         Vehiculo vehiculo = new Carro("VGT777", "BUGAT", "Pedro", LocalDateTime.of(2024, 2, 22, 7, 0), LocalDateTime.of(2024, 2, 22, 8, 0));
         // creo un parqueadero esperado que contenga el mismo vehiculo dos veces, para poder así verificar si está repetido
         Collection<List<Collection<Vehiculo>>> parqueadero = List.of(
-                List.of(List.of(), List.of(vehiculo), List.of()),
-                List.of(List.of(), List.of(), List.of())
+                List.<Collection<Vehiculo>>of((Collection<Vehiculo>) List.of(), List.of(vehiculo), List.of()),
+                List.<Collection<Vehiculo>>of((Collection<Vehiculo>) List.of(), List.of(), List.of())
         );
         // Verifico si el vehiculo existe, si existe me devuelve un true, por lo contrario, lo ideal es que me devuelva
         // un False
