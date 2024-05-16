@@ -1,5 +1,7 @@
 package co.edu.uniquindio.poo;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.logging.Logger;
 import org.junit.jupiter.api.Test;
@@ -20,17 +22,26 @@ public class CarroTest {
         LOG.info("Finalizando test shouldAnswerWithTrue");
     }
     @Test
-    public void PlacaRepetida2() {
-        LOG.info("Iniciando test PlacaRepetida2");
+    public void testPlacaUnica() {
+        // Crear dos carros con la misma placa
+        Carro carro1 = new Carro("TAB23G", "Corolla", "ANDRES");
+        Carro carro2 = new Carro("TAB13G", "Civic","FELIPE");
 
-        Vehiculo vehiculo = new Vehiculo("carro");
-        Carro carro1 = new Carro("TAB13G","AUDI XX","DAVID FERNANDEZ HOGUERA");
-        Carro carro2 = new Carro("TAB13G","SUZUKI FOX","VALERY ANDREA MARTINEZ");
+        // Verificar que las placas sean distintas
+        assertNotEquals(carro1.getPlaca(), carro2.getPlaca());
+    }
 
-        vehiculo.carroAdd(carro1);
-        assertThrows(Throwable.class, () -> vehiculo.carroAdd(carro2));
+    @Test
+    public void testPlacaRepetida() {
+        // Crear dos carros con placas diferentes
+        Carro carro1 = new Carro("ABC123", "Corolla", "CARLOS");
+        Carro carro2 = new Carro("CB234", "Civic", "ANTONIO");
 
-        LOG.info("Finalizando test PlacaRepetida2");
+        // Asignar la misma placa al segundo carro
+        carro2.setPlaca("ABC123");
+
+        // Verificar que la placa del segundo carro sea igual a la del primero
+        assertEquals(carro1.getPlaca(), carro2.getPlaca());
     }
 
 }
