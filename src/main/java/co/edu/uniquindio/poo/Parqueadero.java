@@ -1,5 +1,6 @@
 package co.edu.uniquindio.poo;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Scanner;
 
@@ -107,6 +108,25 @@ public class Parqueadero {
                     System.out.println("Espacio en [" + i + "][" + j + "]: vacío");
                 }
             }
+        }
+    }
+
+    public long obtenerDiferenciaHoras(Vehiculo vehiculo){
+        Duration duracion = Duration.between(vehiculo.getFechaEntrada(), vehiculo.getFechaSalida());
+        return duracion.toHours();
+    }
+
+    public int calcularCosto(Vehiculo vehiculo){
+        if(vehiculo instanceof Carro){
+            return (int) (obtenerDiferenciaHoras(vehiculo) * tarifaCarro);
+        } else if (vehiculo instanceof Moto) {
+            if (vehiculo.getTipo() == TipoMoto.CLASICA){
+                return (int) (obtenerDiferenciaHoras(vehiculo) * tarifaMotoC);
+            } else {
+                return (int) (obtenerDiferenciaHoras(vehiculo) * tarifaMotoH);
+            }
+        } else {
+            throw new IllegalArgumentException("Tipo de vehículo no soportado");
         }
     }
 }
