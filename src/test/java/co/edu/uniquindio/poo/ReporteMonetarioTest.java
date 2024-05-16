@@ -58,7 +58,7 @@ public class ReporteMonetarioTest {
 
         
         var vehiculosEsperados= List.of(dinero1, dinero2, dinero3, dinero4);
-        Collection<Vehiculo> vehiculos= List.of(dinero1, dinero2, dinero3, dinero4);
+        Vehiculo[] vehiculos= List.of(dinero1, dinero2, dinero3, dinero4).toArray(new Vehiculo[0]);
 
         var vehiculosLista=ReporteMonetario.registrarDineroDiario(vehiculos);
 
@@ -69,7 +69,7 @@ public class ReporteMonetarioTest {
     @Test
     public void calcularCostoDiarioReal(){
         LOG.info("Inicio prueba de coleccionDiariaConDatos");
-        var parqueadero=new Parqueadero(4,5,2000,1900,3000);
+        var parqueadero=new Parqueadero();
 
         var vehiculo1=new Moto("123","A","Jade",LocalDateTime.of(14,05,24,12,45,0),LocalDateTime.of(14,05,24,17,45,0),80,CLASICA);
         var vehiculo2=new Carro("234","B","Anni",LocalDateTime.of(14,05,24,12,45,0),LocalDateTime.of(14,05,24,17,45,0));
@@ -117,19 +117,19 @@ public class ReporteMonetarioTest {
         var dinero3=parqueadero.calcularCosto(hora3);
         var dinero4=parqueadero.calcularCosto(hora4);
 
-        Collection<Vehiculo> dinero= List.of(dinero1,dinero2);
-        Collection<Vehiculo> dineroOtro= List.of(dinero1,dinero2);
+        Vehiculo[] dinero= List.of(dinero1, dinero2).toArray(new Vehiculo[0]);
+        Vehiculo[] dineroOtro= List.of(dinero1, dinero2).toArray(new Vehiculo[0]);
 
         var vehiculosLista1=ReporteMonetario.registrarDineroDiario(dinero);
         var vehiculosLista2=ReporteMonetario.registrarDineroDiario(dineroOtro);
         
-        var listaMensual=ReporteMonetario.registrarDineroMensual(vehiculosLista1,vehiculosLista2);
+        var listaMensual=ReporteMonetario.registrarDineroMensual(vehiculosLista1,vehiculosLista2, vehiculos);
         LOG.info("Fin prueba de coleccionDiariaConDatos");
     }
     @Test 
     public void calcularCostoMensualReal(){
         LOG.info("Fin prueba de coleccionDiariaConDatos");
-        var parqueadero=new Parqueadero(4,5,2000,1900,3000);
+        var parqueadero=new Parqueadero();
 
         var vehiculo1=new Moto("123","A","Jade",LocalDateTime.of(14,05,24,12,45,0),LocalDateTime.of(14,05,24,17,45,0),80,CLASICA);
         var vehiculo2=new Carro("234","B","Anni",LocalDateTime.of(14,05,24,12,45,0),LocalDateTime.of(14,05,24,17,45,0));
@@ -148,9 +148,11 @@ public class ReporteMonetarioTest {
 
         var dinero3=parqueadero.calcularCosto(hora3);
         var dinero4=parqueadero.calcularCosto(hora4);
+        Vehiculo[] dinero= List.of(dinero1, dinero2).toArray(new Vehiculo[0]);
+        Vehiculo[] dineroOtro= List.of(dinero1, dinero2).toArray(new Vehiculo[0]);
 
-        var vehiculosLista1=ReporteMonetario.registrarDineroDiario(dinero1,dinero2);
-        var vehiculosLista2=ReporteMonetario.registrarDineroDiario(dinero3,dinero4);
+        var vehiculosLista1=ReporteMonetario.registrarDineroDiario(dinero);
+        var vehiculosLista2=ReporteMonetario.registrarDineroDiario(dineroOtro);
 
         var sumaDia1= dinero1+dinero2;
         var sumaDia2= dinero3+dinero4;

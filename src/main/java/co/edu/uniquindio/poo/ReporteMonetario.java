@@ -7,19 +7,17 @@ import java.util.Collections;
 import java.util.List;
 
 public class ReporteMonetario extends Parqueadero {
-    private int año;
+    private int ano;
     private int mes;
 
-    public ReporteMonetario(int filas, int columnas, int tarifaMotoH, int tarifaMotoC, int tarifaCarro, int mes, Collection<Vehiculo>, int año){
-    super(filas,columnas,tarifaMotoH,tarifaMotoC,tarifaCarro, List<Vehiculo>);
-    this.año=año;
+    public ReporteMonetario( int mes, int ano){
+    this.ano=ano;
     this.mes=mes;
     }
 
-
-
-    public static List<Double> registrarDineroDiario(Collection<Vehiculo> vehiculos){
+    public static List<Double> registrarDineroDiario(Vehiculo[] vehiculos){
         List<Double> ingresosDelDia=new ArrayList<>();
+        List<List<Vehiculo>> registroVehiculo = getRegistroVehiculo();
         for (Vehiculo vehiculo:vehiculos){
             ingresosDelDia.add(vehiculo.calcularCosto());
         }
@@ -35,10 +33,11 @@ public class ReporteMonetario extends Parqueadero {
         return calcularDineroDiario;
     }
 
-    public static List<Double> registrarDineroMensual(Collection<Vehiculo> vehiculos, int mes, int año) {
+    public static List<Double> registrarDineroMensual(Vehiculo[] vehiculos,int mes, int ano) {
         List<Double> ingresosDelMes = new ArrayList<>();
-        for (int dia = 1; dia <= Parqueadero.diasEnMes(mes, año); dia++) {
-            LocalDateTime fecha = LocalDateTime.of(año, mes, dia, 0, 0);
+        List<List<Vehiculo>> registroVehiculo = getRegistroVehiculo();
+        for (int dia = 1; dia <= Parqueadero.diasEnMes(mes, ano); dia++) {
+            LocalDateTime fecha = LocalDateTime.of(ano, mes, dia, 0, 0);
             List<Double> costosPorDia = registrarDineroDiario(vehiculos, fecha);
             double calcularDineroDiario = calcularDineroDiario(costosPorDia);
             ingresosDelMes.add(calcularDineroDiario);
@@ -46,21 +45,23 @@ public class ReporteMonetario extends Parqueadero {
         return Collections.unmodifiableList(ingresosDelMes);
     }
 
-    public double calcularDineroMensual(Collection<Vehiculo> vehiculos, int mes, int año) {
+    public double calcularDineroMensual(Vehiculo[] vehiculos, int mes, int ano) {
+
+        List<List<Vehiculo>> registroVehiculo = getRegistroVehiculo();
         double calcularDineroMensual = 0.0;
-        List<Double> costosPorMes = registrarDineroMensual(vehiculos, mes, año);
+        List<Double> costosPorMes = registrarDineroMensual(vehiculos, mes, ano);
         for (double costoPorDia : costosPorMes) {
             calcularDineroMensual += costoPorDia;
         }
         return calcularDineroMensual;
 }
 
-    public int getAño() {
-        return año;
+    public int getAno() {
+        return ano;
     }
 
-    public void setAño(int año) {
-        this.año = año;
+    public void setAno(int ano) {
+        this.ano = ano;
     }
 
     public int getMes() {

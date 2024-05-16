@@ -1,10 +1,6 @@
 package co.edu.uniquindio.poo;
 
-import javax.swing.plaf.synth.SynthOptionPaneUI;
-import java.nio.channels.ServerSocketChannel;
-import java.sql.SQLOutput;
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Parqueadero {
@@ -85,7 +81,7 @@ public class Parqueadero {
         this.tarifaCarro = tarifaCarro;
     }
 
-    public Collection<Vehiculo> getRegistroVehiculo() {
+    public static List<List<Vehiculo>> getRegistroVehiculo() {
         return registroVehiculo;
     }
 
