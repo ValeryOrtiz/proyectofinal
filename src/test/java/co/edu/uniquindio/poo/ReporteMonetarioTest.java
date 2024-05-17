@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.logging.Logger;
 import org.junit.jupiter.api.Test;
 import java.util.LinkedList;
@@ -60,7 +59,7 @@ public class ReporteMonetarioTest {
         var vehiculosEsperados= List.of(dinero1, dinero2, dinero3, dinero4);
         Vehiculo[] vehiculos= List.of(dinero1, dinero2, dinero3, dinero4).toArray(new Vehiculo[0]);
 
-        var vehiculosLista=ReporteMonetario.registrarDineroDiario(vehiculos);
+        var vehiculosLista=ReporteMonetario.registrarDineroDiario(vehiculos, parqueadero);
 
         assertEquals(vehiculosEsperados, vehiculosLista);
 
@@ -120,8 +119,8 @@ public class ReporteMonetarioTest {
         Vehiculo[] dinero= List.of(dinero1, dinero2).toArray(new Vehiculo[0]);
         Vehiculo[] dineroOtro= List.of(dinero1, dinero2).toArray(new Vehiculo[0]);
 
-        var vehiculosLista1=ReporteMonetario.registrarDineroDiario(dinero);
-        var vehiculosLista2=ReporteMonetario.registrarDineroDiario(dineroOtro);
+        var vehiculosLista1=ReporteMonetario.registrarDineroDiario(dinero, parqueadero);
+        var vehiculosLista2=ReporteMonetario.registrarDineroDiario(dineroOtro, parqueadero);
         
         var listaMensual=ReporteMonetario.registrarDineroMensual(vehiculosLista1,vehiculosLista2, vehiculos);
         LOG.info("Fin prueba de coleccionDiariaConDatos");
@@ -151,8 +150,8 @@ public class ReporteMonetarioTest {
         Vehiculo[] dinero= List.of(dinero1, dinero2).toArray(new Vehiculo[0]);
         Vehiculo[] dineroOtro= List.of(dinero1, dinero2).toArray(new Vehiculo[0]);
 
-        var vehiculosLista1=ReporteMonetario.registrarDineroDiario(dinero);
-        var vehiculosLista2=ReporteMonetario.registrarDineroDiario(dineroOtro);
+        var vehiculosLista1=ReporteMonetario.registrarDineroDiario(dinero, parqueadero);
+        var vehiculosLista2=ReporteMonetario.registrarDineroDiario(dineroOtro, parqueadero);
 
         var sumaDia1= dinero1+dinero2;
         var sumaDia2= dinero3+dinero4;
