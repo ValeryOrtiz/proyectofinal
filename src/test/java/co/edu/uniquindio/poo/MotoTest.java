@@ -1,49 +1,49 @@
 package co.edu.uniquindio.poo;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import java.util.logging.Logger;
-
-import javax.management.ConstructorParameters;
-
 import org.junit.jupiter.api.Test;
+import java.time.LocalDateTime;
+import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Unit test for simple App.
- */
 public class MotoTest {
-    private static final Logger LOG = Logger.getLogger(AppTest.class.getName());
 
-    /**
-     * Rigorous Test :-)
-     */
     @Test
-    public void shouldAnswerWithTrue() {
-        LOG.info("Iniciado test shouldAnswerWithTrue");
-        assertTrue(true);
-        LOG.info("Finalizando test shouldAnswerWithTrue");
+    public void crearMoto() {
+        LocalDateTime fechaEntrada = LocalDateTime.of(2024, 5, 18, 10, 0);
+        Moto moto = new Moto("ABC123", "Honda", "Juan", fechaEntrada, 150, TipoMoto.CLASICA);
+
+        assertEquals("ABC123", moto.getPlaca());
+        assertEquals("Honda", moto.getModelo());
+        assertEquals("Juan", moto.getPropietario());
+        assertEquals(fechaEntrada, moto.getFechaEntrada());
+        assertEquals(150, moto.getVelocidadMaxima());
+        assertEquals(TipoMoto.CLASICA, moto.getTipo());
     }
-    /*Realizo prueba para verificar que la placa de moto no se repita */
+
     @Test
-    public void PlacaRepetida() {
-        LOG.info("Iniciando test PlacaRepetida");
+    public void crearMotoConFechaSalida() {
+        LocalDateTime fechaEntrada = LocalDateTime.of(2024, 5, 18, 10, 0);
+        LocalDateTime fechaSalida = LocalDateTime.of(2024, 5, 18, 15, 0);
+        Moto moto = new Moto("XYZ456", "Yamaha", "Ana", fechaEntrada, fechaSalida, 180, TipoMoto.HIBRIDA);
 
-        Vehiculo vehiculo = new Vehiculo("Moto");
-        Moto moto1 = new Moto("TAB23G","AUDI XX","DAVID FERNANDEZ HOGUERA");
-        Moto moto2 = new Moto("TAB23G","SUZUKI FOX","VALERY ANDREA MARTINEZ");
-
-        vehiculo.motoAdd(moto1);
-        assertThrows(Throwable.class, () -> vehiculo.motoAdd(moto2));
-
-        LOG.info("Finalizando test PlacaRepetida");
+        assertEquals("XYZ456", moto.getPlaca());
+        assertEquals("Yamaha", moto.getModelo());
+        assertEquals("Ana", moto.getPropietario());
+        assertEquals(fechaEntrada, moto.getFechaEntrada());
+        assertEquals(fechaSalida, moto.getFechaSalida());
+        assertEquals(180, moto.getVelocidadMaxima());
+        assertEquals(TipoMoto.HIBRIDA, moto.getTipo());
     }
-    /*test para que la velocidadmaxima de la moto no sea negativa */
+
     @Test
-    public void VelocidadNegativa(){
-        LOG.info("Inicio test VelocidadNegativa");
-        assertThrows(Throwable.class,() -> new Moto("TAB23G","AUDI XX","DAVID FERNANDEZ HOGUERA",(byte)-100));
-        LOG.info("Finalizando test NegativeAge");
+    public void establecerFechaSalidaMoto() {
+        LocalDateTime fechaEntrada = LocalDateTime.of(2024, 5, 18, 10, 0);
+        Moto moto = new Moto("DEF789", "Suzuki", "Maria", fechaEntrada, 160, TipoMoto.CLASICA);
+
+        LocalDateTime fechaSalida = LocalDateTime.of(2024, 5, 18, 16, 0);
+        moto.setFechaSalida(fechaSalida);
+
+        assertEquals(fechaSalida, moto.getFechaSalida());
     }
 }
+
 
