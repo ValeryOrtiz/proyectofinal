@@ -1,8 +1,7 @@
 package co.edu.uniquindio.poo;
 
-import java.time.Duration;
-import java.util.List;
-import java.util.Scanner;
+import java.time.*;
+import java.util.*;
 
 public class Parqueadero {
     private int filas;
@@ -10,9 +9,13 @@ public class Parqueadero {
     private int tarifaMotoH;
     private int tarifaMotoC;
     private int tarifaCarro;
+    private int mesActual;
+    private int anoActual;
     private List<List<Vehiculo>> registroVehiculo;
 
     public Parqueadero(){
+        LocalDate fechaActual = LocalDate.now();
+
         Scanner input = new Scanner(System.in);
 
         System.out.println("Ingrese el número de filas: ");
@@ -32,14 +35,22 @@ public class Parqueadero {
 
         System.out.println("--------------------------------------------------------------");
 
+        this.mesActual = fechaActual.getMonthValue();
+        this.anoActual = fechaActual.getYear();
+
         registroVehiculo = new ArrayList<>();
 
         for (int i = 0; i < filas; i++) {
-            registroVehiculo.add(new ArrayList<>());
-            for (int j = 0; j < columnas; j++) {
-                registroVehiculo.add(new ArrayList<>());
-            }
+            List<Vehiculo> fila = new ArrayList<>(Collections.nCopies(columnas,null));
+            registroVehiculo.add(fila);
         }
+    }
+
+    public boolean verificarPuesto(int fila, int columna){
+        if (fila < 0 || fila >= filas || columna < 0 || columna >= columnas){
+            throw new IndexOutOfBoundsException("Posición fuera de rango");
+        }
+        return registroVehiculo.get(fila).get(columna) != null;
     }
 
     public int getFilas() {
@@ -90,8 +101,19 @@ public class Parqueadero {
         this.registroVehiculo = registroVehiculo;
     }
 
+    public boolean verificarVehiculoExiste(Vehiculo vehiculo) {
+        for (List<Vehiculo> fila : registroVehiculo) {
+            for (Vehiculo v : fila) {
+                if (v != null && v.getPlaca().equals(vehiculo.getPlaca())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public void registrarVehiculo(int fila, int columna, Vehiculo vehiculo) {
-        if (fila < 0 || fila >= filas || columna < 0 || columna >= columnas || vehiculo.verificarPuesto((fila-1), (columna-1)) == true || vehiculo.verificarVehiculoExiste() == true) {
+        if (fila < 0 || fila >= filas || columna < 0 || columna >= columnas || verificarPuesto(fila, columna) || verificarVehiculoExiste(vehiculo)) {
             System.out.println("Posición inválida/Puesto ocupado/Vehiculo ya existe.");
         } else {
             registroVehiculo.get(fila).set(columna, vehiculo);
@@ -116,17 +138,21 @@ public class Parqueadero {
         return duracion.toHours();
     }
 
-    public int calcularCosto(Vehiculo vehiculo){
+    public double calcularCosto(Vehiculo vehiculo){
         if(vehiculo instanceof Carro){
-            return (int) (obtenerDiferenciaHoras(vehiculo) * tarifaCarro);
+            return (double) (obtenerDiferenciaHoras(vehiculo) * tarifaCarro);
         } else if (vehiculo instanceof Moto) {
             if (vehiculo.getTipo() == TipoMoto.CLASICA){
-                return (int) (obtenerDiferenciaHoras(vehiculo) * tarifaMotoC);
+                return (double) (obtenerDiferenciaHoras(vehiculo) * tarifaMotoC);
             } else {
-                return (int) (obtenerDiferenciaHoras(vehiculo) * tarifaMotoH);
+                return (double) (obtenerDiferenciaHoras(vehiculo) * tarifaMotoH);
             }
         } else {
             throw new IllegalArgumentException("Tipo de vehículo no soportado");
         }
+    }
+
+    public static int diasEnMes(int mesActual, int anoActual){
+        return YearMonth.of(anoActual,mesActual).lengthOfMonth();
     }
 }
