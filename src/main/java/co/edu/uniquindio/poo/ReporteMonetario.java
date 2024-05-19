@@ -8,8 +8,9 @@ import java.util.List;
 public class ReporteMonetario extends Parqueadero {
 
 
-    public ReporteMonetario(int mesActual, int anoActual) {
-        super(mesActual,anoActual);
+    public ReporteMonetario() {
+
+        super();
     }
 
     public static List<Double> registrarDineroDiario(Vehiculo[] vehiculos, Parqueadero parqueadero) {
