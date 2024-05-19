@@ -1,11 +1,9 @@
 package co.edu.uniquindio.poo;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -14,10 +12,12 @@ import java.time.LocalDateTime;
 public class InterfazParqueadero extends Application {
 
     private Parqueadero parqueadero;
+    private Registro registro;
 
     @Override
     public void start(Stage primaryStage) {
         parqueadero = new Parqueadero();
+        registro = new Registro();
 
         Button registrarVehiculoBtn = new Button("Registrar Vehículo");
         registrarVehiculoBtn.setOnAction(e -> mostrarVentanaRegistro());
@@ -25,9 +25,12 @@ public class InterfazParqueadero extends Application {
         Button generarReporteBtn = new Button("Generar Reporte Monetario");
         generarReporteBtn.setOnAction(e -> generarReporteMonetario());
 
+        Button verVehiculosBtn = new Button("Ver Vehículos Registrados");
+        verVehiculosBtn.setOnAction(e -> mostrarVehiculosRegistrados());
+
         VBox root = new VBox(10);
         root.setPadding(new Insets(10));
-        root.getChildren().addAll(registrarVehiculoBtn, generarReporteBtn);
+        root.getChildren().addAll(registrarVehiculoBtn, generarReporteBtn, verVehiculosBtn);
 
         Scene scene = new Scene(root, 300, 200);
 
@@ -122,9 +125,6 @@ public class InterfazParqueadero extends Application {
         ventanaReporte.initModality(Modality.APPLICATION_MODAL);
         ventanaReporte.setTitle("Reporte Monetario");
 
-        // Aquí puedes crear los elementos de la ventana de reporte monetario
-        // Por ejemplo, puedes mostrar información sobre los ingresos diarios o mensuales del parqueadero
-
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(10));
 
@@ -132,6 +132,24 @@ public class InterfazParqueadero extends Application {
         ventanaReporte.setScene(scene);
         ventanaReporte.showAndWait();
 
+    }
+
+    private void mostrarVehiculosRegistrados() {
+        Stage ventanaVehiculos = new Stage();
+        ventanaVehiculos.initModality(Modality.APPLICATION_MODAL);
+        ventanaVehiculos.setTitle("Vehículos Registrados");
+
+        ListView<Vehiculo> listViewVehiculos = new ListView<>();
+
+        listViewVehiculos.setItems(FXCollections.observableList(registro.getVehiculosRegistrados()));
+
+        VBox layout = new VBox(10);
+        layout.setPadding(new Insets(10));
+        layout.getChildren().addAll(listViewVehiculos);
+
+        Scene scene = new Scene(layout, 300, 200);
+        ventanaVehiculos.setScene(scene);
+        ventanaVehiculos.showAndWait();
     }
 
     public static void main(String[] args) {
