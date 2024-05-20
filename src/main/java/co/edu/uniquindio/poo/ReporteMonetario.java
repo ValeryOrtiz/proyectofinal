@@ -43,7 +43,7 @@ public class ReporteMonetario extends Parqueadero {
         return Collections.unmodifiableList(ingresosDelMes);
     }
 
-    public double calcularDineroMensual(Vehiculo[] vehiculos, int mesActual, int anoActual, Parqueadero parqueadero) {
+    public static double calcularDineroMensual(Vehiculo[] vehiculos, int mesActual, int anoActual, Parqueadero parqueadero) {
 
         List<List<Vehiculo>> registroVehiculo = getRegistroVehiculo();
         double calcularDineroMensual = 0.0;
