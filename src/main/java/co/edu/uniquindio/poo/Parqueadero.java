@@ -11,7 +11,7 @@ public class Parqueadero {
     private int tarifaCarro;
     private int mesActual;
     private int anoActual;
-    private List<List<Vehiculo>> registroVehiculo;
+    private static List<List<Vehiculo>> registroVehiculo;
 
     public Parqueadero(){
         LocalDate fechaActual = LocalDate.now();
@@ -44,6 +44,8 @@ public class Parqueadero {
             List<Vehiculo> fila = new ArrayList<>(Collections.nCopies(columnas,null));
             registroVehiculo.add(fila);
         }
+
+        input.close();
     }
 
     public boolean verificarPuesto(int fila, int columna){
@@ -142,7 +144,8 @@ public class Parqueadero {
         if(vehiculo instanceof Carro){
             return (double) (obtenerDiferenciaHoras(vehiculo) * tarifaCarro);
         } else if (vehiculo instanceof Moto) {
-            if (vehiculo.getTipo() == TipoMoto.CLASICA){
+            TipoMoto vehiculo1 = ((Moto) vehiculo).getTipo();
+            if (vehiculo1 == TipoMoto.CLASICA){
                 return (double) (obtenerDiferenciaHoras(vehiculo) * tarifaMotoC);
             } else {
                 return (double) (obtenerDiferenciaHoras(vehiculo) * tarifaMotoH);

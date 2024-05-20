@@ -1,13 +1,6 @@
 package co.edu.uniquindio.poo;
 import java.time.LocalDateTime;
 
-
-// Enum para el tipo de moto
-enum TipoMoto {
-    CLASICA,
-    HIBRIDA
-}
-
 // Clase para representar una Moto
 class Moto extends Vehiculo {
     private int velocidadMaxima;
@@ -35,5 +28,6 @@ class Moto extends Vehiculo {
     public TipoMoto getTipo() {
         return tipo;
     }
+
 }
 
