@@ -1,19 +1,16 @@
 package co.edu.uniquindio.poo;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.ListView;
 import javafx.collections.FXCollections;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.stage.Modality;
+
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.time.LocalDateTime;
 
@@ -28,7 +25,10 @@ public class InterfazParqueadero extends Application {
         parqueadero = new Parqueadero();
         registro = new Registro();
 
-        //botones para acceder a la info
+        // Botones para acceder a la info
+        Button infoParqueaderoBtn = new Button("Registrar Información del Parqueadero");
+        infoParqueaderoBtn.setOnAction(e -> mostrarVentanaInfoParqueadero());
+
         Button registrarVehiculoBtn = new Button("Registrar Vehículo");
         registrarVehiculoBtn.setOnAction(e -> mostrarVentanaRegistro());
 
@@ -40,7 +40,7 @@ public class InterfazParqueadero extends Application {
 
         VBox root = new VBox(10);
         root.setPadding(new Insets(10));
-        root.getChildren().addAll(registrarVehiculoBtn, generarReporteBtn, verVehiculosBtn);
+        root.getChildren().addAll(infoParqueaderoBtn,registrarVehiculoBtn, generarReporteBtn, verVehiculosBtn);
 
         Scene scene = new Scene(root, 300, 200);
 
@@ -49,6 +49,57 @@ public class InterfazParqueadero extends Application {
         primaryStage.show();
     }
 
+    private void mostrarVentanaInfoParqueadero() {
+        Stage ventanaInfoParqueadero = new Stage();
+        ventanaInfoParqueadero.initModality(Modality.APPLICATION_MODAL);
+        ventanaInfoParqueadero.setTitle("Información del Parqueadero");
+
+        // Componentes para ingresar información del parqueadero (filas, columnas, tarifas)
+        Label filasLabel = new Label("Número de Filas:");
+        TextField filasField = new TextField();
+
+        Label columnasLabel = new Label("Número de Columnas:");
+        TextField columnasField = new TextField();
+
+        Label tarifaCarroLabel = new Label("Tarifa Carro:");
+        TextField tarifaCarroField = new TextField();
+
+        Label tarifaMotoHLabel = new Label("Tarifa Moto Híbrida:");
+        TextField tarifaMotoHField = new TextField();
+
+        Label tarifaMotoCLabel = new Label("Tarifa Moto Clásica:");
+        TextField tarifaMotoCField = new TextField();
+
+        Button confirmarBtn = new Button("Confirmar");
+        confirmarBtn.setOnAction(e -> {
+            // Obtener la información ingresada por el usuario
+            int filas = Integer.parseInt(filasField.getText());
+            int columnas = Integer.parseInt(columnasField.getText());
+            int tarifaCarro = Integer.parseInt(tarifaCarroField.getText());
+            int tarifaMotoH = Integer.parseInt(tarifaMotoHField.getText());
+            int tarifaMotoC = Integer.parseInt(tarifaMotoCField.getText());
+
+            // Configurar el parqueadero con la información ingresada
+            parqueadero = new Parqueadero(filas, columnas, tarifaMotoH, tarifaMotoC, tarifaCarro);
+
+            ventanaInfoParqueadero.close();
+        });
+
+        VBox layout = new VBox(10);
+        layout.setPadding(new Insets(10));
+        layout.getChildren().addAll(
+                filasLabel, filasField,
+                columnasLabel, columnasField,
+                tarifaCarroLabel, tarifaCarroField,
+                tarifaMotoHLabel, tarifaMotoHField,
+                tarifaMotoCLabel, tarifaMotoCField,
+                confirmarBtn
+        );
+
+        Scene scene = new Scene(layout, 300, 250);
+        ventanaInfoParqueadero.setScene(scene);
+        ventanaInfoParqueadero.showAndWait();
+    }
 
     private void mostrarVentanaRegistro() {
         Stage ventanaRegistro = new Stage();
@@ -60,21 +111,29 @@ public class InterfazParqueadero extends Application {
         tipoChoiceBox.getItems().addAll("Carro", "Moto Híbrida", "Moto Clásica");
         tipoChoiceBox.setValue("Carro");
 
-        TextField marcaField = new TextField();
-        marcaField.setPromptText("Marca del vehículo");
+        TextField placaField = new TextField();
+        placaField.setPromptText("Placa del vehículo");
 
         TextField modeloField = new TextField();
         modeloField.setPromptText("Modelo del vehículo");
 
-        TextField placaField = new TextField();
-        placaField.setPromptText("Placa del vehículo");
+        TextField propietarioField = new TextField();
+        propietarioField.setPromptText("Propietario del vehículo");
 
-        // Para meterle mas espacios para la moto (velocidad máxima)
         Label velocidadLabel = new Label("Velocidad Máxima:");
         TextField velocidadField = new TextField();
         velocidadField.setPromptText("Velocidad Máxima");
+        velocidadField.setVisible(false); // Inicialmente oculto
 
-        // Campos para seleccionar la fila y la columna
+        // Para mostrar la velocidad solo si se selecciona moto híbrida o clásica
+        tipoChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals("Moto Híbrida") || newValue.equals("Moto Clásica")) {
+                velocidadField.setVisible(true);
+            } else {
+                velocidadField.setVisible(false);
+            }
+        });
+
         Label filaLabel = new Label("Fila:");
         TextField filaField = new TextField();
         filaField.setPromptText("Número de fila");
@@ -83,51 +142,73 @@ public class InterfazParqueadero extends Application {
         TextField columnaField = new TextField();
         columnaField.setPromptText("Número de columna");
 
+        Label fechaEntradaLabel = new Label("Fecha de Entrada:");
+        TextField fechaEntradaField = new TextField();
+        fechaEntradaField.setPromptText("Formato: YYYY-MM-DD HH:MM:SS");
+
+        Label fechaSalidaLabel = new Label("Fecha de Salida:");
+        TextField fechaSalidaField = new TextField();
+        fechaSalidaField.setPromptText("Formato: YYYY-MM-DD HH:MM:SS");
+
         Button confirmarBtn = new Button("Confirmar Registro");
         confirmarBtn.setOnAction(e -> {
+            // Obtener la información ingresada por el usuario
             String tipo = tipoChoiceBox.getValue();
-            String marca = marcaField.getText();
-            String modelo = modeloField.getText();
             String placa = placaField.getText();
-
-            // Crea el objeto Vehiculo segun lo que se seleccione antes
-            Vehiculo vehiculo;
-            if (tipo.equals("Carro")) {
-                vehiculo = new Carro(placa, modelo, marca, LocalDateTime.now());
-            } else if (tipo.equals("Moto Híbrida")) {
-                int velocidadMaxima = Integer.parseInt(velocidadField.getText());
-                vehiculo = new Moto(placa, modelo, marca, LocalDateTime.now(), velocidadMaxima, TipoMoto.HIBRIDA);
-            } else { // Moto Clásica
-                int velocidadMaxima = Integer.parseInt(velocidadField.getText());
-                vehiculo = new Moto(placa, modelo, marca, LocalDateTime.now(), velocidadMaxima, TipoMoto.CLASICA);
-            }
-
-            // Para obtener la fila y la columna seleccionadas
+            String modelo = modeloField.getText();
+            String propietario = propietarioField.getText();
             int fila = Integer.parseInt(filaField.getText());
             int columna = Integer.parseInt(columnaField.getText());
+            LocalDateTime fechaEntrada = LocalDateTime.parse(fechaEntradaField.getText(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            LocalDateTime fechaSalida = LocalDateTime.parse(fechaSalidaField.getText(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-            // Registra el vehículo en el parqueadero
-            parqueadero.registrarVehiculo(fila, columna, vehiculo);
+            // Crear el objeto vehículo según el tipo seleccionado
+            Vehiculo vehiculo;
+            if (tipo.equals("Carro")) {
+                vehiculo = new Carro(placa, modelo, propietario, fechaEntrada, fechaSalida);
+            } else {
+                int velocidadMaxima = Integer.parseInt(velocidadField.getText());
+                TipoMoto tipoMoto = tipo.equals("Moto Híbrida") ? TipoMoto.HIBRIDA : TipoMoto.CLASICA;
+                vehiculo = new Moto(placa, modelo, propietario, fechaEntrada, fechaSalida, velocidadMaxima, tipoMoto);
+            }
+            double costo = Parqueadero.calcularCosto(vehiculo);
+            System.out.println("El costo del estacionamiento es: " + costo);
 
-            ventanaRegistro.close();
+            // Verificar si la posición está ocupada
+            if (parqueadero.verificarPuesto(fila, columna)) {
+                // Mostrar mensaje de posición ocupada
+                mostrarAlerta("Posición Ocupada", "La posición seleccionada ya está ocupada.");
+            } else {
+                // Registrar el vehículo en el parqueadero
+                parqueadero.registrarVehiculo(fila, columna, vehiculo);
+                ventanaRegistro.close();
+            }
         });
 
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(10));
         layout.getChildren().addAll(
                 tipoLabel, tipoChoiceBox,
-                marcaField, modeloField, placaField,
+                placaField, modeloField, propietarioField,
                 velocidadLabel, velocidadField,
                 filaLabel, filaField,
                 columnaLabel, columnaField,
+                fechaEntradaLabel, fechaEntradaField,
+                fechaSalidaLabel, fechaSalidaField,
                 confirmarBtn
         );
 
-        Scene scene = new Scene(layout, 300, 300);
+        Scene scene = new Scene(layout, 300, 450);
         ventanaRegistro.setScene(scene);
         ventanaRegistro.showAndWait();
     }
-
+    public void mostrarAlerta(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
 
 
     private void generarReporteMonetario() {
@@ -136,38 +217,27 @@ public class InterfazParqueadero extends Application {
         ventanaReporte.setTitle("Reporte Monetario");
 
         // Crea la tabla para mostrar el reporte monetario
-        TableView<ReporteMonetario> tablaReporte = new TableView<>();
+        TableView<Vehiculo> tablaReporte = new TableView<>();
 
+        // Configura las columnas de la tabla
+        TableColumn<Vehiculo, String> placaCol = new TableColumn<>("Placa");
+        placaCol.setCellValueFactory(new PropertyValueFactory<>("placa"));
 
-        //Para crear la columna de ingresos diarios
-        TableColumn<ReporteMonetario, Double> ingresosDiariosCol = new TableColumn<>("Ingresos Diarios");
-        ingresosDiariosCol.setCellValueFactory(cellData -> {
-            List<Double> ingresosDelDia = ReporteMonetario.registrarDineroDiario(registro.getVehiculosRegistrados().toArray(new Vehiculo[0]), parqueadero);
-            double totalIngresosDelDia = ReporteMonetario.calcularDineroDiario(ingresosDelDia);
-            return new SimpleDoubleProperty(totalIngresosDelDia).asObject();
+        TableColumn<Vehiculo, String> modeloCol = new TableColumn<>("Modelo");
+        modeloCol.setCellValueFactory(new PropertyValueFactory<>("modelo"));
+
+        TableColumn<Vehiculo, Double> costoCol = new TableColumn<>("Costo de Estacionamiento");
+        costoCol.setCellValueFactory(cellData -> {
+            Vehiculo vehiculo = cellData.getValue();
+            double costo = Parqueadero.calcularCosto(vehiculo);
+            return new SimpleDoubleProperty(costo).asObject();
         });
 
-        //Para crear la columna de los ingresos mensuales
-        TableColumn<ReporteMonetario, Double> ingresosMensualesCol = new TableColumn<>("Ingresos Mensuales");
-        ingresosMensualesCol.setCellValueFactory(cellData -> {
-            int mesActual = LocalDateTime.now().getMonthValue();
-            int anoActual = LocalDateTime.now().getYear();
-            List<Double> ingresosDelMes = ReporteMonetario.registrarDineroMensual(registro.getVehiculosRegistrados().toArray(new Vehiculo[0]), mesActual, anoActual, parqueadero);
-            double totalIngresosDelMes = ingresosDelMes.stream().mapToDouble(Double::doubleValue).sum();
-            return new SimpleDoubleProperty(totalIngresosDelMes).asObject();
-        });
+        // Agrega las columnas a la tabla
+        tablaReporte.getColumns().addAll(placaCol, modeloCol, costoCol);
 
-        //Para crear la columna de el total de los ingresos mensuales
-        TableColumn<ReporteMonetario, Double> totalIngresosMensualesCol = new TableColumn<>("Total Ingresos Mensuales");
-        totalIngresosMensualesCol.setCellValueFactory(cellData -> {
-            int mesActual = LocalDateTime.now().getMonthValue();
-            int anoActual = LocalDateTime.now().getYear();
-            double totalIngresosMensuales = ReporteMonetario.calcularDineroMensual(registro.getVehiculosRegistrados().toArray(new Vehiculo[0]), mesActual, anoActual, parqueadero);
-            return new SimpleDoubleProperty(totalIngresosMensuales).asObject();
-        });
-
-        // Se agregan las columnas a la tabla
-        tablaReporte.getColumns().addAll(ingresosDiariosCol, ingresosMensualesCol, totalIngresosMensualesCol);
+        // Establece los datos de la tabla
+        tablaReporte.setItems(FXCollections.observableList(registro.getVehiculosRegistrados()));
 
         // Para el diseño de la ventana que va a salir
         VBox layout = new VBox(10);
