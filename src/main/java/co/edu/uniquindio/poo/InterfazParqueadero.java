@@ -1,5 +1,6 @@
 package co.edu.uniquindio.poo;
 import javafx.application.Application;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -8,6 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class InterfazParqueadero extends Application {
 
@@ -59,7 +61,7 @@ public class InterfazParqueadero extends Application {
         TextField placaField = new TextField();
         placaField.setPromptText("Placa del vehículo");
 
-        // Agregar campos adicionales para la moto (velocidad máxima)
+        // Para meterle mas espacios para la moto (velocidad máxima)
         Label velocidadLabel = new Label("Velocidad Máxima:");
         TextField velocidadField = new TextField();
         velocidadField.setPromptText("Velocidad Máxima");
@@ -80,7 +82,7 @@ public class InterfazParqueadero extends Application {
             String modelo = modeloField.getText();
             String placa = placaField.getText();
 
-            // Crear el objeto Vehiculo adecuado según el tipo seleccionado
+            // Crea el objeto Vehiculo segun lo que se seleccione antes
             Vehiculo vehiculo;
             if (tipo.equals("Carro")) {
                 vehiculo = new Carro(placa, modelo, marca, LocalDateTime.now());
@@ -92,11 +94,11 @@ public class InterfazParqueadero extends Application {
                 vehiculo = new Moto(placa, modelo, marca, LocalDateTime.now(), velocidadMaxima, TipoMoto.CLASICA);
             }
 
-            // Obtener la fila y la columna seleccionadas
+            // Para obtener la fila y la columna seleccionadas
             int fila = Integer.parseInt(filaField.getText());
             int columna = Integer.parseInt(columnaField.getText());
 
-            // Registrar el vehículo en el parqueadero
+            // Registra el vehículo en el parqueadero
             parqueadero.registrarVehiculo(fila, columna, vehiculo);
 
             ventanaRegistro.close();
@@ -125,13 +127,48 @@ public class InterfazParqueadero extends Application {
         ventanaReporte.initModality(Modality.APPLICATION_MODAL);
         ventanaReporte.setTitle("Reporte Monetario");
 
+        // Crea la tabla para mostrar el reporte monetario
+        TableView<ReporteMonetario> tablaReporte = new TableView<>();
+
+
+        //Para crear la columna de ingresos diarios
+        TableColumn<ReporteMonetario, Double> ingresosDiariosCol = new TableColumn<>("Ingresos Diarios");
+        ingresosDiariosCol.setCellValueFactory(cellData -> {
+            List<Double> ingresosDelDia = ReporteMonetario.registrarDineroDiario(registro.getVehiculosRegistrados().toArray(new Vehiculo[0]), parqueadero);
+            double totalIngresosDelDia = ReporteMonetario.calcularDineroDiario(ingresosDelDia);
+            return new SimpleDoubleProperty(totalIngresosDelDia).asObject();
+        });
+
+        //Para crear la columna de los ingresos mensuales
+        TableColumn<ReporteMonetario, Double> ingresosMensualesCol = new TableColumn<>("Ingresos Mensuales");
+        ingresosMensualesCol.setCellValueFactory(cellData -> {
+            int mesActual = LocalDateTime.now().getMonthValue();
+            int anoActual = LocalDateTime.now().getYear();
+            List<Double> ingresosDelMes = ReporteMonetario.registrarDineroMensual(registro.getVehiculosRegistrados().toArray(new Vehiculo[0]), mesActual, anoActual, parqueadero);
+            double totalIngresosDelMes = ingresosDelMes.stream().mapToDouble(Double::doubleValue).sum();
+            return new SimpleDoubleProperty(totalIngresosDelMes).asObject();
+        });
+
+        //Para crear la columna de el total de los ingresos mensuales
+        TableColumn<ReporteMonetario, Double> totalIngresosMensualesCol = new TableColumn<>("Total Ingresos Mensuales");
+        totalIngresosMensualesCol.setCellValueFactory(cellData -> {
+            int mesActual = LocalDateTime.now().getMonthValue();
+            int anoActual = LocalDateTime.now().getYear();
+            double totalIngresosMensuales = ReporteMonetario.calcularDineroMensual(registro.getVehiculosRegistrados().toArray(new Vehiculo[0]), mesActual, anoActual, parqueadero);
+            return new SimpleDoubleProperty(totalIngresosMensuales).asObject();
+        });
+
+        // Se agregan las columnas a la tabla
+        tablaReporte.getColumns().addAll(ingresosDiariosCol, ingresosMensualesCol, totalIngresosMensualesCol);
+
+        // Para el diseño de la ventana que va a salir
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(10));
+        layout.getChildren().addAll(tablaReporte);
 
-        Scene scene = new Scene(layout, 300, 200);
+        Scene scene = new Scene(layout, 400, 300);
         ventanaReporte.setScene(scene);
         ventanaReporte.showAndWait();
-
     }
 
     private void mostrarVehiculosRegistrados() {
@@ -151,6 +188,7 @@ public class InterfazParqueadero extends Application {
         ventanaVehiculos.setScene(scene);
         ventanaVehiculos.showAndWait();
     }
+
 
     public static void main(String[] args) {
         launch(args);
