@@ -13,30 +13,24 @@ public class Parqueadero {
     private int anoActual;
     private static List<List<Vehiculo>> registroVehiculo;
 
-    public Parqueadero(){
-        LocalDate fechaActual = LocalDate.now();
+    public Parqueadero(int filas, int columnas, int tarifaMotoH, int tarifaMotoC, int tarifaCarro) {
+        this.filas = filas;
+        this.columnas = columnas;
+        Parqueadero.tarifaMotoH = tarifaMotoH;
+        Parqueadero.tarifaMotoC = tarifaMotoC;
+        Parqueadero.tarifaCarro = tarifaCarro;
 
-        Scanner input = new Scanner(System.in);
-
-        this.filas = pedirEntero("Ingrese el número de filas: ", input);
-        this.columnas = pedirEntero("Ingrese el número de columnas: ", input);
-        tarifaMotoH = pedirEntero("Ingrese la tarifa por hora para una moto híbrida: ", input);
-        tarifaMotoC = pedirEntero("Ingrese la tarifa por hora para una moto clásica: ", input);
-        tarifaCarro = pedirEntero("Ingrese la tarifa por hora para un carro: ", input);
-
-        System.out.println("--------------------------------------------------------------");
-
-        this.mesActual = fechaActual.getMonthValue();
-        this.anoActual = fechaActual.getYear();
+        this.mesActual = LocalDateTime.now().getMonthValue();
+        this.anoActual = LocalDateTime.now().getYear();
 
         registroVehiculo = new ArrayList<>();
-
         for (int i = 0; i < filas; i++) {
-            List<Vehiculo> fila = new ArrayList<>(Collections.nCopies(columnas,null));
+            List<Vehiculo> fila = new ArrayList<>(columnas);
+            for (int j = 0; j < columnas; j++) {
+                fila.add(null);
+            }
             registroVehiculo.add(fila);
         }
-
-        input.close();
     }
 
     private int pedirEntero(String mensaje, Scanner input) {
