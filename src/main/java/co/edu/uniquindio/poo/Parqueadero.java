@@ -33,6 +33,9 @@ public class Parqueadero {
         }
     }
 
+    public Parqueadero() {
+    }
+
     private int pedirEntero(String mensaje, Scanner input) {
         int valor = 0;
         boolean valido = false;
