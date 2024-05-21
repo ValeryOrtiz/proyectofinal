@@ -6,9 +6,9 @@ import java.util.*;
 public class Parqueadero {
     private int filas;
     private int columnas;
-    private int tarifaMotoH;
-    private int tarifaMotoC;
-    private int tarifaCarro;
+    private static int tarifaMotoH;
+    private static int tarifaMotoC;
+    private static int tarifaCarro;
     private int mesActual;
     private int anoActual;
     private static List<List<Vehiculo>> registroVehiculo;
@@ -18,20 +18,11 @@ public class Parqueadero {
 
         Scanner input = new Scanner(System.in);
 
-        System.out.println("Ingrese el número de filas: ");
-        this.filas = Integer.parseInt(input.nextLine());
-
-        System.out.println("Ingrese el número de columnas: ");
-        this.columnas = Integer.parseInt(input.nextLine());
-
-        System.out.println("Ingrese la tarifa por hora para una moto híbrida: ");
-        this.tarifaMotoH = Integer.parseInt(input.nextLine());
-
-        System.out.println("Ingrese la tarifa por hora para una moto clásica: ");
-        this.tarifaMotoC = Integer.parseInt(input.nextLine());
-
-        System.out.println("Ingrese la tarifa por hora para un carro: ");
-        this.tarifaCarro = Integer.parseInt(input.nextLine());
+        this.filas = pedirEntero("Ingrese el número de filas: ", input);
+        this.columnas = pedirEntero("Ingrese el número de columnas: ", input);
+        tarifaMotoH = pedirEntero("Ingrese la tarifa por hora para una moto híbrida: ", input);
+        tarifaMotoC = pedirEntero("Ingrese la tarifa por hora para una moto clásica: ", input);
+        tarifaCarro = pedirEntero("Ingrese la tarifa por hora para un carro: ", input);
 
         System.out.println("--------------------------------------------------------------");
 
@@ -46,6 +37,25 @@ public class Parqueadero {
         }
 
         input.close();
+    }
+
+    private int pedirEntero(String mensaje, Scanner input) {
+        int valor = 0;
+        boolean valido = false;
+        while (!valido) {
+            try {
+                System.out.println(mensaje);
+                valor = Integer.parseInt(input.nextLine());
+                if (valor < 0) {
+                    System.out.println("Por favor, ingrese un número positivo.");
+                } else {
+                    valido = true;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada no válida. Por favor, ingrese un número entero.");
+            }
+        }
+        return valor;
     }
 
     public boolean verificarPuesto(int fila, int columna){
@@ -135,12 +145,12 @@ public class Parqueadero {
         }
     }
 
-    public long obtenerDiferenciaHoras(Vehiculo vehiculo){
+    public static long obtenerDiferenciaHoras(Vehiculo vehiculo){
         Duration duracion = Duration.between(vehiculo.getFechaEntrada(), vehiculo.getFechaSalida());
         return duracion.toHours();
     }
 
-    public double calcularCosto(Vehiculo vehiculo){
+    public static double calcularCosto(Vehiculo vehiculo){
         if(vehiculo instanceof Carro){
             return (double) (obtenerDiferenciaHoras(vehiculo) * tarifaCarro);
         } else if (vehiculo instanceof Moto) {
@@ -157,5 +167,31 @@ public class Parqueadero {
 
     public static int diasEnMes(int mesActual, int anoActual){
         return YearMonth.of(anoActual,mesActual).lengthOfMonth();
+    }
+
+    public List<Vehiculo> getVehiculos() {
+        List<Vehiculo> vehiculos = new ArrayList<>();
+        for (List<Vehiculo> fila : registroVehiculo) {
+            for (Vehiculo vehiculo : fila) {
+                if (vehiculo != null) {
+                    vehiculos.add(vehiculo);
+                }
+            }
+        }
+        return vehiculos;
+    }
+
+    public void add(int fila, int columna, Vehiculo vehiculo) {
+        if (fila < 0 || fila >= filas || columna < 0 || columna >= columnas) {
+            throw new IndexOutOfBoundsException("Posición fuera de rango");
+        }
+        if (verificarPuesto(fila, columna)) {
+            System.out.println("El puesto en [" + fila + "][" + columna + "] ya está ocupado.");
+        } else if (verificarVehiculoExiste(vehiculo)) {
+            System.out.println("El vehículo con placa " + vehiculo.getPlaca() + " ya está registrado en el parqueadero.");
+        } else {
+            registroVehiculo.get(fila).set(columna, vehiculo);
+            System.out.println("Vehículo agregado en la posición [" + fila + "][" + columna + "].");
+        }
     }
 }
