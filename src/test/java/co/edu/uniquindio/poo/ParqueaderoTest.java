@@ -138,7 +138,7 @@ public class ParqueaderoTest {
         parqueadero.setColumnas(3);
         parqueadero.setRegistroVehiculo(new ArrayList<>());
         for (int i = 0; i < 2; i++) {
-            Parqueadero.getRegistroVehiculo().add(new ArrayList<>(List.of(new Vehiculo[3])));
+            assertTrue(Parqueadero.getRegistroVehiculo().add(new ArrayList<>(List.of(new Vehiculo[3]))));
         }
 
         // Agregando vehículos a la matriz
