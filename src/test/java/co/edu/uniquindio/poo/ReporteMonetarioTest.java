@@ -48,10 +48,7 @@ public class ReporteMonetarioTest {
         var vehiculo3 = new Moto("345", "C", "Abril", LocalDateTime.of(2024, 5, 24, 12, 45, 0), LocalDateTime.of(2024, 5, 24, 17, 45, 0), 100, TipoMoto.HIBRIDA);
         var vehiculo4 = new Carro("456", "D", "Pepe", LocalDateTime.of(2024, 5, 24, 12, 45, 0), LocalDateTime.of(2024, 5, 24, 17, 45, 0));
 
-        var hora1 = parqueadero.obtenerDiferenciaHoras(vehiculo1);
-        var hora2 = parqueadero.obtenerDiferenciaHoras(vehiculo2);
-        var hora3 = parqueadero.obtenerDiferenciaHoras(vehiculo3);
-        var hora4 = parqueadero.obtenerDiferenciaHoras(vehiculo4);
+
 
         var dinero1 = parqueadero.calcularCosto(vehiculo1);
         var dinero2 = parqueadero.calcularCosto(vehiculo2);
@@ -78,10 +75,7 @@ public class ReporteMonetarioTest {
         var vehiculo3 = new Moto("345", "C", "Abril", LocalDateTime.of(2024, 5, 24, 12, 45, 0), LocalDateTime.of(2024, 5, 24, 17, 45, 0), 100, TipoMoto.HIBRIDA);
         var vehiculo4 = new Carro("456", "D", "Pepe", LocalDateTime.of(2024, 5, 24, 12, 45, 0), LocalDateTime.of(2024, 5, 24, 17, 45, 0));
 
-        var hora1 = parqueadero.obtenerDiferenciaHoras(vehiculo1);
-        var hora2 = parqueadero.obtenerDiferenciaHoras(vehiculo2);
-        var hora3 = parqueadero.obtenerDiferenciaHoras(vehiculo3);
-        var hora4 = parqueadero.obtenerDiferenciaHoras(vehiculo4);
+
 
         var dinero1 = parqueadero.calcularCosto(vehiculo1);
         var dinero2 = parqueadero.calcularCosto(vehiculo2);
@@ -105,10 +99,7 @@ public class ReporteMonetarioTest {
         var vehiculo3 = new Moto("123", "A", "Jade", LocalDateTime.of(2024, 5, 25, 12, 45, 0), LocalDateTime.of(2024, 5, 25, 17, 45, 0), 80, TipoMoto.CLASICA);
         var vehiculo4 = new Carro("234", "B", "Anni", LocalDateTime.of(2024, 5, 25, 12, 45, 0), LocalDateTime.of(2024, 5, 25, 17, 45, 0));
 
-        var hora1 = parqueadero.obtenerDiferenciaHoras(vehiculo1);
-        var hora2 = parqueadero.obtenerDiferenciaHoras(vehiculo2);
-        var hora3 = parqueadero.obtenerDiferenciaHoras(vehiculo3);
-        var hora4 = parqueadero.obtenerDiferenciaHoras(vehiculo4);
+
 
         var dinero1 = parqueadero.calcularCosto(vehiculo1);
         var dinero2 = parqueadero.calcularCosto(vehiculo2);
@@ -142,8 +133,7 @@ public class ReporteMonetarioTest {
         var vehiculo1=new Moto("123","A","Jade",LocalDateTime.of(2024, 5, 24, 12, 45, 0),LocalDateTime.of(2024, 5, 24, 17, 45, 0), 80, TipoMoto.CLASICA);
         var vehiculo2=new Carro("234","B","Anni",LocalDateTime.of(2024, 5, 24, 12, 45, 0),LocalDateTime.of(2024, 5, 24, 17, 45, 0));
 
-        var hora1=parqueadero.obtenerDiferenciaHoras(vehiculo1);
-        var hora2=parqueadero.obtenerDiferenciaHoras(vehiculo2);
+
 
         var dinero1=parqueadero.calcularCosto(vehiculo1);
         var dinero2=parqueadero.calcularCosto(vehiculo2);
@@ -151,8 +141,7 @@ public class ReporteMonetarioTest {
         var vehiculo3=new Moto("123","A","Jade",LocalDateTime.of(2024, 5, 25, 12, 45, 0),LocalDateTime.of(2024, 5, 25, 17, 45, 0), 80, TipoMoto.CLASICA);
         var vehiculo4=new Carro("234","B","Anni",LocalDateTime.of(2024, 5, 25, 12, 45, 0),LocalDateTime.of(2024, 5, 25, 17, 45, 0));
 
-        var hora3=parqueadero.obtenerDiferenciaHoras(vehiculo3);
-        var hora4=parqueadero.obtenerDiferenciaHoras(vehiculo4);
+
 
         var dinero3=parqueadero.calcularCosto(vehiculo3);
         var dinero4=parqueadero.calcularCosto(vehiculo4);
