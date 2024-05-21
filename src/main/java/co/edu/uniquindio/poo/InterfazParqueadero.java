@@ -1,15 +1,26 @@
 package co.edu.uniquindio.poo;
 import javafx.application.Application;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import java.time.LocalDateTime;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.ListView;
+import javafx.collections.FXCollections;
+import javafx.scene.layout.VBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.stage.Modality;
 import java.util.List;
+import java.time.LocalDateTime;
+
 
 public class InterfazParqueadero extends Application {
 
@@ -21,6 +32,7 @@ public class InterfazParqueadero extends Application {
         parqueadero = new Parqueadero();
         registro = new Registro();
 
+        //botones para acceder a la info
         Button registrarVehiculoBtn = new Button("Registrar Vehículo");
         registrarVehiculoBtn.setOnAction(e -> mostrarVentanaRegistro());
 
@@ -191,6 +203,7 @@ public class InterfazParqueadero extends Application {
 
 
     public static void main(String[] args) {
+
         launch(args);
     }
 }
