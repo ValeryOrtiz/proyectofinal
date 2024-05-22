@@ -147,20 +147,25 @@ public class Parqueadero {
         return duracion.toHours();
     }
 
-    public static double calcularCosto(Vehiculo vehiculo){
-        if(vehiculo instanceof Carro){
-            return (double) (obtenerDiferenciaHoras(vehiculo) * tarifaCarro);
-        } else if (vehiculo instanceof Moto) {
-            TipoMoto vehiculo1 = ((Moto) vehiculo).getTipo();
-            if (vehiculo1 == TipoMoto.CLASICA){
-                return (double) (obtenerDiferenciaHoras(vehiculo) * tarifaMotoC);
+    public static double calcularCosto(Vehiculo vehiculo) {
+        if (vehiculo.getFechaEntrada() != null && vehiculo.getFechaSalida() != null) {
+            if (vehiculo instanceof Carro) {
+                return (double) (obtenerDiferenciaHoras(vehiculo) * tarifaCarro);
+            } else if (vehiculo instanceof Moto) {
+                TipoMoto vehiculo1 = ((Moto) vehiculo).getTipo();
+                if (vehiculo1 == TipoMoto.CLASICA) {
+                    return (double) (obtenerDiferenciaHoras(vehiculo) * tarifaMotoC);
+                } else {
+                    return (double) (obtenerDiferenciaHoras(vehiculo) * tarifaMotoH);
+                }
             } else {
-                return (double) (obtenerDiferenciaHoras(vehiculo) * tarifaMotoH);
+                throw new IllegalArgumentException("Tipo de vehículo no soportado");
             }
         } else {
-            throw new IllegalArgumentException("Tipo de vehículo no soportado");
+            throw new IllegalArgumentException("Fechas de entrada o salida no inicializadas");
         }
     }
+
 
     public static int diasEnMes(int mesActual, int anoActual){
         return YearMonth.of(anoActual,mesActual).lengthOfMonth();
