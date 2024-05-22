@@ -1,31 +1,33 @@
 package co.edu.uniquindio.poo;
 import javafx.application.Application;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.collections.FXCollections;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.stage.Modality;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 
 public class InterfazParqueadero extends Application {
 
     private Parqueadero parqueadero;
     private Registro registro;
+    private ListView<Vehiculo> listViewVehiculos = new ListView<>();
 
     @Override
     public void start(Stage primaryStage) {
         parqueadero = new Parqueadero();
         registro = new Registro();
 
-        // Botones para acceder a la info
         Button infoParqueaderoBtn = new Button("Registrar Información del Parqueadero");
         infoParqueaderoBtn.setOnAction(e -> mostrarVentanaInfoParqueadero());
 
@@ -40,7 +42,7 @@ public class InterfazParqueadero extends Application {
 
         VBox root = new VBox(10);
         root.setPadding(new Insets(10));
-        root.getChildren().addAll(infoParqueaderoBtn,registrarVehiculoBtn, generarReporteBtn, verVehiculosBtn);
+        root.getChildren().addAll(infoParqueaderoBtn, registrarVehiculoBtn, generarReporteBtn, verVehiculosBtn);
 
         Scene scene = new Scene(root, 300, 200);
 
@@ -54,7 +56,6 @@ public class InterfazParqueadero extends Application {
         ventanaInfoParqueadero.initModality(Modality.APPLICATION_MODAL);
         ventanaInfoParqueadero.setTitle("Información del Parqueadero");
 
-        // Componentes para ingresar información del parqueadero (filas, columnas, tarifas)
         Label filasLabel = new Label("Número de Filas:");
         TextField filasField = new TextField();
 
@@ -72,14 +73,12 @@ public class InterfazParqueadero extends Application {
 
         Button confirmarBtn = new Button("Confirmar");
         confirmarBtn.setOnAction(e -> {
-            // Obtener la información ingresada por el usuario
             int filas = Integer.parseInt(filasField.getText());
             int columnas = Integer.parseInt(columnasField.getText());
             int tarifaCarro = Integer.parseInt(tarifaCarroField.getText());
             int tarifaMotoH = Integer.parseInt(tarifaMotoHField.getText());
             int tarifaMotoC = Integer.parseInt(tarifaMotoCField.getText());
 
-            // Configurar el parqueadero con la información ingresada
             parqueadero = new Parqueadero(filas, columnas, tarifaMotoH, tarifaMotoC, tarifaCarro);
 
             ventanaInfoParqueadero.close();
@@ -123,9 +122,8 @@ public class InterfazParqueadero extends Application {
         Label velocidadLabel = new Label("Velocidad Máxima:");
         TextField velocidadField = new TextField();
         velocidadField.setPromptText("Velocidad Máxima");
-        velocidadField.setVisible(false); // Inicialmente oculto
+        velocidadField.setVisible(false);
 
-        // Para mostrar la velocidad solo si se selecciona moto híbrida o clásica
         tipoChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.equals("Moto Híbrida") || newValue.equals("Moto Clásica")) {
                 velocidadField.setVisible(true);
@@ -152,7 +150,6 @@ public class InterfazParqueadero extends Application {
 
         Button confirmarBtn = new Button("Confirmar Registro");
         confirmarBtn.setOnAction(e -> {
-            // Obtener la información ingresada por el usuario
             String tipo = tipoChoiceBox.getValue();
             String placa = placaField.getText();
             String modelo = modeloField.getText();
@@ -162,7 +159,6 @@ public class InterfazParqueadero extends Application {
             LocalDateTime fechaEntrada = LocalDateTime.parse(fechaEntradaField.getText(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             LocalDateTime fechaSalida = LocalDateTime.parse(fechaSalidaField.getText(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-            // Crear el objeto vehículo según el tipo seleccionado
             Vehiculo vehiculo;
             if (tipo.equals("Carro")) {
                 vehiculo = new Carro(placa, modelo, propietario, fechaEntrada, fechaSalida);
@@ -174,15 +170,16 @@ public class InterfazParqueadero extends Application {
             double costo = Parqueadero.calcularCosto(vehiculo);
             System.out.println("El costo del estacionamiento es: " + costo);
 
-            // Verificar si la posición está ocupada
             if (parqueadero.verificarPuesto(fila, columna)) {
-                // Mostrar mensaje de posición ocupada
                 mostrarAlerta("Posición Ocupada", "La posición seleccionada ya está ocupada.");
             } else {
-                // Registrar el vehículo en el parqueadero
                 parqueadero.registrarVehiculo(fila, columna, vehiculo);
+                registro.agregarVehiculo(vehiculo);
+                listViewVehiculos.setItems(FXCollections.observableList(registro.getVehiculosRegistrados()));
                 ventanaRegistro.close();
+                generarReporteMonetario();
             }
+
         });
 
         VBox layout = new VBox(10);
@@ -202,6 +199,7 @@ public class InterfazParqueadero extends Application {
         ventanaRegistro.setScene(scene);
         ventanaRegistro.showAndWait();
     }
+
     public void mostrarAlerta(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(titulo);
@@ -210,36 +208,48 @@ public class InterfazParqueadero extends Application {
         alert.showAndWait();
     }
 
-
     private void generarReporteMonetario() {
         Stage ventanaReporte = new Stage();
         ventanaReporte.initModality(Modality.APPLICATION_MODAL);
         ventanaReporte.setTitle("Reporte Monetario");
 
-        // Crea la tabla para mostrar el reporte monetario
-        TableView<Vehiculo> tablaReporte = new TableView<>();
+        TableView<String> tablaReporte = new TableView<>();
 
-        // Configura las columnas de la tabla
-        TableColumn<Vehiculo, String> placaCol = new TableColumn<>("Placa");
-        placaCol.setCellValueFactory(new PropertyValueFactory<>("placa"));
+        TableColumn<String, String> ingresosDiariosCol = new TableColumn<>("Ingresos Diarios");
+        ingresosDiariosCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue()));
 
-        TableColumn<Vehiculo, String> modeloCol = new TableColumn<>("Modelo");
-        modeloCol.setCellValueFactory(new PropertyValueFactory<>("modelo"));
+        TableColumn<String, String> ingresosMensualesCol = new TableColumn<>("Ingresos Mensuales");
+        ingresosMensualesCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue()));
 
-        TableColumn<Vehiculo, Double> costoCol = new TableColumn<>("Costo de Estacionamiento");
-        costoCol.setCellValueFactory(cellData -> {
-            Vehiculo vehiculo = cellData.getValue();
-            double costo = Parqueadero.calcularCosto(vehiculo);
-            return new SimpleDoubleProperty(costo).asObject();
-        });
+        TableColumn<String, String> costoVehiculoCol = new TableColumn<>("Costo Vehículo");
+        costoVehiculoCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue()));
 
-        // Agrega las columnas a la tabla
-        tablaReporte.getColumns().addAll(placaCol, modeloCol, costoCol);
+        TableColumn<String, String> totalCol = new TableColumn<>("Total");
+        totalCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue()));
 
-        // Establece los datos de la tabla
-        tablaReporte.setItems(FXCollections.observableList(registro.getVehiculosRegistrados()));
+        tablaReporte.getColumns().addAll(ingresosDiariosCol, ingresosMensualesCol, costoVehiculoCol, totalCol);
 
-        // Para el diseño de la ventana que va a salir
+        List<Double> ingresosDiarios = ReporteMonetario.registrarDineroDiario(registro.getVehiculosRegistrados().toArray(new Vehiculo[0]), parqueadero);
+        List<Double> ingresosMensuales = ReporteMonetario.registrarDineroMensual(registro.getVehiculosRegistrados().toArray(new Vehiculo[0]), LocalDateTime.now().getMonthValue(), LocalDateTime.now().getYear(), parqueadero);
+        double total = ingresosDiarios.stream().mapToDouble(Double::doubleValue).sum();
+
+        double costoTotal = registro.getVehiculosRegistrados().stream()
+                .mapToDouble(vehiculo -> Parqueadero.calcularCosto(vehiculo))
+                .sum();
+
+        List<String> reporte = new ArrayList<>();
+        double costoVehiculosTotal = 0.0;
+        for (Vehiculo vehiculo : registro.getVehiculosRegistrados()) {
+            double costoVehiculo = Parqueadero.calcularCosto(vehiculo);
+            costoVehiculosTotal += costoVehiculo;
+            reporte.add(String.valueOf(costoVehiculo));
+        }
+        reporte.addAll(ingresosDiarios.stream().map(String::valueOf).collect(Collectors.toList()));
+        reporte.addAll(ingresosMensuales.stream().map(String::valueOf).collect(Collectors.toList()));
+        reporte.add(String.valueOf(costoVehiculosTotal));
+
+        tablaReporte.setItems(FXCollections.observableList(reporte));
+
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(10));
         layout.getChildren().addAll(tablaReporte);
@@ -249,14 +259,18 @@ public class InterfazParqueadero extends Application {
         ventanaReporte.showAndWait();
     }
 
+
     private void mostrarVehiculosRegistrados() {
         Stage ventanaVehiculos = new Stage();
         ventanaVehiculos.initModality(Modality.APPLICATION_MODAL);
         ventanaVehiculos.setTitle("Vehículos Registrados");
 
-        ListView<Vehiculo> listViewVehiculos = new ListView<>();
+        // Obtener la lista de vehículos registrados
+        List<Vehiculo> vehiculosRegistrados = registro.getVehiculosRegistrados();
 
-        listViewVehiculos.setItems(FXCollections.observableList(registro.getVehiculosRegistrados()));
+        // Configurar la lista de vehículos en el ListView
+        ListView<Vehiculo> listViewVehiculos = new ListView<>();
+        listViewVehiculos.setItems(FXCollections.observableList(vehiculosRegistrados));
 
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(10));
@@ -269,7 +283,7 @@ public class InterfazParqueadero extends Application {
 
 
     public static void main(String[] args) {
-
         launch(args);
     }
 }
+

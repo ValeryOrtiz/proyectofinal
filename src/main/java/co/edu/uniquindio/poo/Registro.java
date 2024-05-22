@@ -16,4 +16,7 @@ public class Registro extends Parqueadero {
     public List<Vehiculo> getVehiculosRegistrados() {
         return vehiculosRegistrados;
     }
+
+    public void agregarVehiculo(Vehiculo vehiculo) {
+    }
 }
