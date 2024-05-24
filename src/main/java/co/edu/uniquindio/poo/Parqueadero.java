@@ -148,23 +148,26 @@ public class Parqueadero {
     }
 
     public static double calcularCosto(Vehiculo vehiculo) {
-        if (vehiculo.getFechaEntrada() != null && vehiculo.getFechaSalida() != null) {
-            if (vehiculo instanceof Carro) {
-                return (double) (obtenerDiferenciaHoras(vehiculo) * tarifaCarro);
-            } else if (vehiculo instanceof Moto) {
-                TipoMoto vehiculo1 = ((Moto) vehiculo).getTipo();
-                if (vehiculo1 == TipoMoto.CLASICA) {
-                    return (double) (obtenerDiferenciaHoras(vehiculo) * tarifaMotoC);
-                } else {
-                    return (double) (obtenerDiferenciaHoras(vehiculo) * tarifaMotoH);
-                }
+        if (vehiculo.getFechaEntrada() == null) {
+            throw new IllegalArgumentException("La fecha de entrada no está inicializada");
+        }
+        if (vehiculo.getFechaSalida() == null) {
+            throw new IllegalArgumentException("La fecha de salida no está inicializada");
+        }
+        if (vehiculo instanceof Carro) {
+            return obtenerDiferenciaHoras(vehiculo) * tarifaCarro;
+        } else if (vehiculo instanceof Moto) {
+            TipoMoto tipoMoto = ((Moto) vehiculo).getTipo();
+            if (tipoMoto == TipoMoto.CLASICA) {
+                return obtenerDiferenciaHoras(vehiculo) * tarifaMotoC;
             } else {
-                throw new IllegalArgumentException("Tipo de vehículo no soportado");
+                return obtenerDiferenciaHoras(vehiculo) * tarifaMotoH;
             }
         } else {
-            throw new IllegalArgumentException("Fechas de entrada o salida no inicializadas");
+            throw new IllegalArgumentException("Tipo de vehículo no soportado");
         }
     }
+
 
 
     public static int diasEnMes(int mesActual, int anoActual){
@@ -195,5 +198,24 @@ public class Parqueadero {
             registroVehiculo.get(fila).set(columna, vehiculo);
             System.out.println("Vehículo agregado en la posición [" + fila + "][" + columna + "].");
         }
+    }
+    public void registrarSalidaVehiculo(String placa, LocalDate fechaSalida, LocalTime horaSalida) {
+        Vehiculo vehiculo = buscarVehiculoPorPlaca(placa);
+        if (vehiculo != null) {
+            LocalDateTime fechaSalidaDateTime = fechaSalida.atTime(horaSalida);
+            vehiculo.setFechaSalida(fechaSalidaDateTime);
+        } else {
+            throw new IllegalArgumentException("No se encontró un vehículo con la placa " + placa);
+        }
+    }
+    public Vehiculo buscarVehiculoPorPlaca(String placa) {
+        for (List<Vehiculo> fila : registroVehiculo) {
+            for (Vehiculo vehiculo : fila) {
+                if (vehiculo != null && vehiculo.getPlaca().equals(placa)) {
+                    return vehiculo;
+                }
+            }
+        }
+        return null;
     }
 }
