@@ -11,6 +11,7 @@ public class ReporteMonetario extends Parqueadero {
         super(filas, columnas, tarifaMotoH, tarifaMotoC, tarifaCarro);
     }
 
+    // Método para crear una lista con el dinero diario del parqueadero
     public List<Double> registrarDineroDiario(LocalDateTime dia) {
         List<Double> ingresosDelDia = new ArrayList<>();
         for (Vehiculo vehiculo : getVehiculos()) {
@@ -21,6 +22,7 @@ public class ReporteMonetario extends Parqueadero {
         return Collections.unmodifiableList(ingresosDelDia);
     }
 
+    // Método para que con la lista de dinero diario se calcule el total de ese día
     public double calcularDineroDiario(LocalDateTime dia) {
         double calcularDineroDiario = 0.0;
         List<Double> ingresosDelDia = registrarDineroDiario(dia);
@@ -30,6 +32,7 @@ public class ReporteMonetario extends Parqueadero {
         return calcularDineroDiario;
     }
 
+    // Método para crear una lista del dinero mensual que entra al parqueadero
     public List<Double> registrarDineroMensual(int mesActual, int anoActual) {
         List<Double> ingresosDelMes = new ArrayList<>();
         int diasEnMes = Parqueadero.diasEnMes(mesActual, anoActual);
@@ -41,6 +44,7 @@ public class ReporteMonetario extends Parqueadero {
         return Collections.unmodifiableList(ingresosDelMes);
     }
 
+    // Método para calcular el dinero mensual con la lista del dinero mensual
     public double calcularDineroMensual(int mesActual, int anoActual) {
         double calcularDineroMensual = 0.0;
         List<Double> costosPorMes = registrarDineroMensual(mesActual, anoActual);
@@ -50,3 +54,4 @@ public class ReporteMonetario extends Parqueadero {
         return calcularDineroMensual;
     }
 }
+

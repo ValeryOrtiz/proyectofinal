@@ -32,6 +32,7 @@ public class InterfazParqueadero extends Application {
         launch(args);
     }
 
+    //el metodo que muestra la ventana principal con los botones para que funcione la app
     @Override
     public void start(Stage primaryStage) {
         VBox root = new VBox(10);
@@ -60,6 +61,9 @@ public class InterfazParqueadero extends Application {
         primaryStage.show();
     }
 
+
+
+    //metodo para el primero boton que va a configurar los atributos del parqueadero
     private void mostrarVentanaConfiguracion() {
         Stage stage = new Stage();
         stage.setTitle("Configurar Parqueadero");
@@ -70,6 +74,7 @@ public class InterfazParqueadero extends Application {
         gridPane.setVgap(10);
         gridPane.setPadding(new Insets(20));
 
+        //muestra las casillas para ingresar info
         Label filasLabel = new Label("Filas:");
         TextField filasField = new TextField();
 
@@ -85,6 +90,7 @@ public class InterfazParqueadero extends Application {
         Label tarifaCarroLabel = new Label("Tarifa Carro:");
         TextField tarifaCarroField = new TextField();
 
+        //inicializa el parqueadero con la informacion que se ingreso
         Button guardarBtn = new Button("Guardar");
         guardarBtn.setOnAction(e -> {
             int filas = Integer.parseInt(filasField.getText());
@@ -114,11 +120,14 @@ public class InterfazParqueadero extends Application {
         stage.setScene(scene);
         stage.showAndWait();
     }
+
+    //metodo para el funcionamiento del otro boton
     private void mostrarVentanaRegistroVehiculo() {
         Stage stage = new Stage();
         stage.setTitle("Registrar Vehículo");
         stage.initModality(Modality.APPLICATION_MODAL);
 
+        //para ingresar info en las casillas
         Label placaLabel = new Label("Placa:");
         TextField placaField = new TextField();
 
@@ -153,6 +162,7 @@ public class InterfazParqueadero extends Application {
         TextField velocidadMaximaField = new TextField();
         velocidadMaximaField.setDisable(true);
 
+        //para ingresar mas info segun el vehiculo
         tipoVehiculoComboBox.setOnAction(e -> {
             if (tipoVehiculoComboBox.getValue().equals("Moto")) {
                 tipoMotoComboBox.setDisable(false);
@@ -163,6 +173,7 @@ public class InterfazParqueadero extends Application {
             }
         });
 
+        //para llamar los metodos necesarios de otras clases que registre la info
         Button registrarButton = new Button("Registrar");
         registrarButton.setOnAction(e -> {
             String placa = placaField.getText();
@@ -227,11 +238,13 @@ public class InterfazParqueadero extends Application {
         stage.showAndWait();
     }
 
+    //para registrar la salida de un vehiculo segun su placa
     private void mostrarVentanaSalidaVehiculo() {
         Stage stage = new Stage();
         stage.setTitle("Registrar Salida de Vehículo");
         stage.initModality(Modality.APPLICATION_MODAL);
 
+        //para las casillas
         Label placaLabel = new Label("Placa:");
         TextField placaField = new TextField();
 
@@ -321,11 +334,13 @@ public class InterfazParqueadero extends Application {
         return ingresos;
     }
 
+    //dentro de la ventana del reporte monetario
     private void mostrarVentanaCalcularCosto() {
         Stage stage = new Stage();
         stage.setTitle("Calcular Costo del Vehículo");
         stage.initModality(Modality.APPLICATION_MODAL);
 
+        //casilla para buscar por placa
         Label placaLabel = new Label("Placa:");
         TextField placaField = new TextField();
 
@@ -334,6 +349,7 @@ public class InterfazParqueadero extends Application {
             String placa = placaField.getText();
             Vehiculo vehiculo = parqueadero.buscarVehiculoPorPlaca(placa);
 
+            //si el vehiculo existe lo busca por placa y calcula el costo si no manda una alerta
             if (vehiculo != null) {
                 try {
                     double costo = Parqueadero.calcularCosto(vehiculo);
@@ -370,6 +386,7 @@ public class InterfazParqueadero extends Application {
     }
 
 
+    //para ver todos los vehiculos registrados en el parqueadero
     private void mostrarVentanaListaVehiculos() {
         Stage stage = new Stage();
         stage.setTitle("Lista de Vehículos");
@@ -404,6 +421,7 @@ public class InterfazParqueadero extends Application {
         stage.showAndWait();
     }
 
+    //para poder poner la posicion de cada vehiculo en la lista de vehiculos
     private String obtenerPosicionVehiculo(Vehiculo vehiculo) {
         List<List<Vehiculo>> registroVehiculo = parqueadero.getRegistroVehiculo();
         for (int fila = 0; fila < registroVehiculo.size(); fila++) {
@@ -416,6 +434,7 @@ public class InterfazParqueadero extends Application {
         return "No encontrado";
     }
 
+    //clase provicional
     public static class Ingreso {
         private final String fecha;
         private final double totalDiario;

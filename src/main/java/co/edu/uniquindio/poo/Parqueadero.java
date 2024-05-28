@@ -55,6 +55,7 @@ public class Parqueadero {
         return valor;
     }
 
+    //comprobar una posicion valida en el parqueadero
     public boolean verificarPuesto(int fila, int columna){
         if (fila < 0 || fila >= filas || columna < 0 || columna >= columnas){
             throw new IndexOutOfBoundsException("Posición fuera de rango");
@@ -110,6 +111,7 @@ public class Parqueadero {
         this.registroVehiculo = registroVehiculo;
     }
 
+    //existencia de un vehiculo dentro del parqueadero
     public boolean verificarVehiculoExiste(Vehiculo vehiculo) {
         for (List<Vehiculo> fila : registroVehiculo) {
             for (Vehiculo v : fila) {
@@ -121,6 +123,7 @@ public class Parqueadero {
         return false;
     }
 
+    //para registrar un vehiculo en el parqueadero con toda su info
     public void registrarVehiculo(int fila, int columna, Vehiculo vehiculo) {
         if (fila < 0 || fila >= filas || columna < 0 || columna >= columnas || verificarPuesto(fila, columna) || verificarVehiculoExiste(vehiculo)) {
             System.out.println("Posición inválida/Puesto ocupado/Vehiculo ya existe.");
@@ -128,6 +131,7 @@ public class Parqueadero {
             registroVehiculo.get(fila).set(columna, vehiculo);
         }
     }
+
 
     public void listarVehiculos() {
         for (int i = 0; i < filas; i++) {
@@ -142,11 +146,13 @@ public class Parqueadero {
         }
     }
 
+    //para saber la diferencia entre la fecha de entrada y de salida
     public static long obtenerDiferenciaHoras(Vehiculo vehiculo){
         Duration duracion = Duration.between(vehiculo.getFechaEntrada(), vehiculo.getFechaSalida());
         return duracion.toHours();
     }
 
+    //para calcular cuanto debe pagar el vehiculo segun el tiempo en el parqueadero
     public static double calcularCosto(Vehiculo vehiculo) {
         if (vehiculo.getFechaEntrada() == null) {
             throw new IllegalArgumentException("La fecha de entrada no está inicializada");
@@ -170,6 +176,7 @@ public class Parqueadero {
 
 
 
+    //para saber en que mes y año estamos
     public static int diasEnMes(int mesActual, int anoActual){
         return YearMonth.of(anoActual,mesActual).lengthOfMonth();
     }
@@ -186,6 +193,7 @@ public class Parqueadero {
         return vehiculos;
     }
 
+    //para agregar un vehiculo al parqueadero
     public void add(int fila, int columna, Vehiculo vehiculo) {
         if (fila < 0 || fila >= filas || columna < 0 || columna >= columnas) {
             throw new IndexOutOfBoundsException("Posición fuera de rango");
@@ -199,6 +207,7 @@ public class Parqueadero {
             System.out.println("Vehículo agregado en la posición [" + fila + "][" + columna + "].");
         }
     }
+    //para ingresar informacion de la salida de un vehiculo segun su placa
     public void registrarSalidaVehiculo(String placa, LocalDate fechaSalida, LocalTime horaSalida) {
         Vehiculo vehiculo = buscarVehiculoPorPlaca(placa);
         if (vehiculo != null) {
@@ -208,6 +217,7 @@ public class Parqueadero {
             throw new IllegalArgumentException("No se encontró un vehículo con la placa " + placa);
         }
     }
+    //para buscar un vehiculo registrado segun su placa
     public Vehiculo buscarVehiculoPorPlaca(String placa) {
         for (List<Vehiculo> fila : registroVehiculo) {
             for (Vehiculo vehiculo : fila) {
